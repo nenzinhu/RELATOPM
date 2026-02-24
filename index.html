@@ -1,33 +1,136 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Gerador Posto 19 - PMRv</title>
     <style>
         :root { --pm-green: #1a472a; --pm-dark: #0d2616; --wa-green: #25D366; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
-        .container { background: white; width: 100%; max-width: 750px; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        header { text-align: center; margin-bottom: 25px; border-bottom: 3px solid var(--pm-green); padding-bottom: 10px; }
-        h1 { color: var(--pm-green); font-size: 22px; margin: 0; }
-        .form-section { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background-color: #f4f7f6; 
+            display: flex; 
+            justify-content: center; 
+            padding: 10px; 
+            margin: 0;
+        }
+
+        .container { 
+            background: white; 
+            width: 100%; 
+            max-width: 750px; 
+            padding: 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+
+        header { 
+            text-align: center; 
+            margin-bottom: 20px; 
+            border-bottom: 3px solid var(--pm-green); 
+            padding-bottom: 10px; 
+        }
+
+        h1 { color: var(--pm-green); font-size: 18px; margin: 0; text-transform: uppercase; }
+        small { font-size: 12px; color: #666; }
+
+        .form-section { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+            margin-bottom: 20px; 
+        }
+
+        @media (max-width: 600px) {
+            .form-section { grid-template-columns: 1fr; }
+            .span-2, .span-3 { grid-column: span 1; }
+            .btn-group { flex-direction: column; }
+            button { width: 100%; }
+            h1 { font-size: 16px; }
+        }
+
         .span-2 { grid-column: span 2; }
         .span-3 { grid-column: span 3; }
+
         label { display: block; font-weight: 600; margin-bottom: 5px; color: #444; font-size: 13px; }
-        input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
-        textarea { resize: vertical; min-height: 80px; font-family: inherit; }
-        input:focus, select:focus, textarea:focus { border-color: var(--pm-green); outline: none; }
-        #relatorio { background: #f9f9f9; border: 1px solid #ddd; padding: 20px; border-radius: 8px; white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.4; color: #222; margin-top: 10px; border-left: 5px solid var(--pm-green); }
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
-        button { flex: 1; min-width: 150px; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        
+        input, select, textarea { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            box-sizing: border-box; 
+            font-size: 14px;
+            background-color: #fff;
+        }
+
+        textarea { resize: vertical; min-height: 100px; font-family: inherit; }
+        
+        #relatorio { 
+            background: #f9f9f9; 
+            border: 1px solid #ddd; 
+            padding: 15px; 
+            border-radius: 8px; 
+            white-space: pre-wrap; 
+            word-wrap: break-word; 
+            font-family: 'Courier New', monospace; 
+            font-size: 13px; 
+            line-height: 1.4; 
+            color: #222; 
+            margin-top: 10px; 
+            border-left: 5px solid var(--pm-green); 
+        }
+
+        .btn-group { display: flex; gap: 8px; margin-top: 15px; }
+        
+        button { 
+            flex: 1; 
+            padding: 14px; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 14px;
+            transition: 0.2s; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px; 
+        }
+
         .btn-copy { background-color: var(--pm-green); color: white; }
         .btn-whatsapp { background-color: var(--wa-green); color: white; }
         .btn-clear { background-color: #e0e0e0; color: #333; }
+
         .hidden { display: none !important; }
-        .manual-box { background: #f0f4f1; padding: 12px; border-radius: 6px; border: 1px solid #d1d8d4; margin-top: 5px; }
-        .vítimas-box { background: #fff0f0; padding: 12px; border-radius: 6px; border: 1px solid #ffdada; margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-        .radio-group { display: flex; gap: 10px; align-items: center; margin-bottom: 5px; }
-        .radio-group label { font-weight: normal; margin-bottom: 0; cursor: pointer; }
+        
+        .manual-box { 
+            background: #f0f4f1; 
+            padding: 12px; 
+            border-radius: 6px; 
+            border: 1px solid #d1d8d4; 
+            margin-top: 5px;
+        }
+
+        .vítimas-box { 
+            background: #fff0f0; 
+            padding: 12px; 
+            border-radius: 6px; 
+            border: 1px solid #ffdada; 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 8px; 
+        }
+        
+        @media (max-width: 400px) {
+            .vítimas-box { grid-template-columns: 1fr; }
+        }
+
+        .radio-group { display: flex; gap: 15px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+        .radio-group label { font-weight: normal; margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 4px; }
     </style>
 </head>
 <body>
@@ -38,15 +141,15 @@
     </header>
 
     <div class="form-section">
-        <div>
-            <label>SADE</label>
-            <input type="text" id="sade" placeholder="---" oninput="atualizar()">
+        <div class="span-1">
+            <label>Protocolo SADE</label>
+            <input type="text" id="sade" placeholder="Nº SADE" oninput="atualizar()">
         </div>
-        <div>
-            <label>Viatura (apenas números)</label>
+        <div class="span-1">
+            <label>Viatura</label>
             <input type="text" id="vtr" placeholder="Ex: 5632" maxlength="4" oninput="validarVtr(this)">
         </div>
-        <div>
+        <div class="span-1">
             <label>Rodovia</label>
             <select id="rodovia" onchange="verificarRodovia()">
                 <option value="SC-401">SC-401</option>
@@ -58,28 +161,19 @@
             </select>
         </div>
 
-        <div id="div_cidade">
-            <label>Cidade</label>
-            <input type="text" id="cidade" value="Florianópolis" oninput="atualizar()">
-        </div>
-        
-        <div>
-            <label>KM (ex: 33 ou 3.2)</label>
-            <input type="text" id="km" placeholder="---" oninput="atualizar()">
-        </div>
+        <div><label>Cidade</label><input type="text" id="cidade" value="Florianópolis" oninput="atualizar()"></div>
+        <div><label>KM (ex: 3.2)</label><input type="text" id="km" placeholder="---" oninput="atualizar()"></div>
 
         <div class="span-3 manual-box">
             <label>Horário do Sinistro</label>
             <div class="radio-group">
-                <input type="radio" name="tipo_hora" id="hora_auto" checked onclick="atualizar()"> 
-                <label for="hora_auto">Hora Atual (Automática)</label>
-                <input type="radio" name="tipo_hora" id="hora_manual" onclick="atualizar()"> 
-                <label for="hora_manual">Digitar Manualmente</label>
+                <label><input type="radio" name="tipo_hora" id="hora_auto" checked onclick="atualizar()"> Auto</label>
+                <label><input type="radio" name="tipo_hora" id="hora_manual" onclick="atualizar()"> Manual</label>
             </div>
             <input type="time" id="input_hora" oninput="atualizar()">
         </div>
 
-        <div class="span-2">
+        <div class="span-3">
             <label>Tipo de Ocorrência</label>
             <select id="ocorrencia" onchange="verificarVítimas()">
                 <option value="Sinistro de trânsito com danos materiais">Danos materiais</option>
@@ -89,18 +183,9 @@
         </div>
 
         <div id="box-vítimas" class="span-3 vítimas-box hidden">
-            <div>
-                <label>Qtd Leve</label>
-                <input type="number" id="qtd_leve" value="0" min="0" oninput="atualizar()">
-            </div>
-            <div>
-                <label>Qtd Grave</label>
-                <input type="number" id="qtd_grave" value="0" min="0" oninput="atualizar()">
-            </div>
-            <div>
-                <label>Qtd Gravíssima</label>
-                <input type="number" id="qtd_gravissima" value="0" min="0" oninput="atualizar()">
-            </div>
+            <div><label>Leve</label><input type="number" id="qtd_leve" value="0" min="0" oninput="atualizar()"></div>
+            <div><label>Grave</label><input type="number" id="qtd_grave" value="0" min="0" oninput="atualizar()"></div>
+            <div><label>Gravíss.</label><input type="number" id="qtd_gravissima" value="0" min="0" oninput="atualizar()"></div>
         </div>
 
         <div class="span-3">
@@ -112,19 +197,19 @@
             </select>
         </div>
 
-        <div>
+        <div class="span-1">
             <label>Sentido</label>
             <select id="sentido" onchange="toggleSentidoManual()">
                 <option value="Centro–Bairro">Centro–Bairro</option>
                 <option value="Bairro–Centro">Bairro–Centro</option>
                 <option value="KM Crescente">KM Crescente</option>
                 <option value="KM Decrescente">KM Decrescente</option>
-                <option value="MANUAL">Informar manualmente...</option>
+                <option value="MANUAL">Outro...</option>
             </select>
-            <input type="text" id="sentido_manual" class="hidden" placeholder="Descreva o sentido..." oninput="atualizar()" style="margin-top:5px;">
+            <input type="text" id="sentido_manual" class="hidden" placeholder="Descreva..." oninput="atualizar()" style="margin-top:5px;">
         </div>
 
-        <div class="span-2">
+        <div class="span-3">
             <label>Tipo de Sinistro</label>
             <select id="subtipo" onchange="mudarSubtipo()">
                 <optgroup label="1. Atropelamento">
@@ -158,26 +243,25 @@
                     <option value="6.4">6.4 Saída seguida de Choque em Objeto (especificar)</option>
                 </optgroup>
             </select>
-        </div>
-
-        <div id="box-objeto" class="span-3 hidden" style="background: #fff3cd; padding: 10px; border-radius: 6px; border: 1px solid #ffeeba;">
-            <label>Especifique o objeto:</label>
-            <input type="text" id="nome_objeto" placeholder="Ex: barranco, lixeira, árvore..." oninput="mudarSubtipo()">
+            
+            <div id="box-objeto" class="manual-box hidden">
+                <label>Qual o objeto?</label>
+                <input type="text" id="nome_objeto" placeholder="Ex: árvore, barranco..." oninput="mudarSubtipo()">
+            </div>
         </div>
 
         <div class="span-3">
-            <label>Dinâmica (Pode editar ou colar aqui)</label>
+            <label>Dinâmica (Pode editar)</label>
             <textarea id="dinamica_texto" oninput="atualizar()"></textarea>
         </div>
     </div>
 
-    <div class="output-container">
-        <div id="relatorio"></div>
-        <div class="btn-group">
-            <button class="btn-clear" onclick="window.location.reload()">Limpar</button>
-            <button class="btn-copy" onclick="copiar()">📋 Copiar Texto</button>
-            <button class="btn-whatsapp" onclick="enviarWhatsApp()">📱 Enviar p/ WhatsApp</button>
-        </div>
+    <div id="relatorio"></div>
+    
+    <div class="btn-group">
+        <button class="btn-clear" onclick="window.location.reload()">Limpar</button>
+        <button class="btn-copy" onclick="copiar()">📋 Copiar Texto</button>
+        <button class="btn-whatsapp" onclick="enviarWhatsApp()">📱 WhatsApp</button>
     </div>
 </div>
 
@@ -197,10 +281,10 @@
         "5.1": "O veículo V1 perdeu o controle direcional e saiu da pista.",
         "5.3": "O veículo V1 perdeu o controle direcional, saiu da pista e capotou.",
         "5.4": "O veículo V1 perdeu o controle direcional, saiu da pista e tombou.",
-        "6.1": "O veículo V1 perdeu o controle direcional, saiu da pista e chocou-se contra um poste.",
-        "6.2": "O veículo V1 perdeu o controle direcional, saiu da pista e chocou-se contra um muro.",
-        "6.3": "O veículo V1 perdeu o controle direcional, saiu da pista e chocou-se contra uma defensa.",
-        "6.4": "O veículo V1 perdeu o controle direcional, saiu da pista e chocou-se contra [OBJETO]."
+        "6.1": "O veículo V1 saiu da pista e chocou-se contra um poste.",
+        "6.2": "O veículo V1 saiu da pista e chocou-se contra um muro.",
+        "6.3": "O veículo V1 saiu da pista e chocou-se contra uma defensa.",
+        "6.4": "O veículo V1 saiu da pista e chocou-se contra [OBJETO]."
     };
 
     function validarVtr(input) {
@@ -210,15 +294,7 @@
 
     function verificarVítimas() {
         const ocorrencia = document.getElementById('ocorrencia').value;
-        const boxVítimas = document.getElementById('box-vítimas');
-        if (ocorrencia === "Sinistro de trânsito com vítima(s)") {
-            boxVítimas.classList.remove('hidden');
-        } else {
-            boxVítimas.classList.add('hidden');
-            document.getElementById('qtd_leve').value = 0;
-            document.getElementById('qtd_grave').value = 0;
-            document.getElementById('qtd_gravissima').value = 0;
-        }
+        document.getElementById('box-vítimas').classList.toggle('hidden', ocorrencia !== "Sinistro de trânsito com vítima(s)");
         atualizar();
     }
 
@@ -228,143 +304,98 @@
         if (["SC-401", "SC-405", "SC-406"].includes(rodovia)) {
             campoCidade.value = "Florianópolis";
             campoCidade.readOnly = true;
-            campoCidade.style.backgroundColor = "#e9ecef";
+            campoCidade.style.backgroundColor = "#f0f0f0";
         } else {
-            campoCidade.value = "";
             campoCidade.readOnly = false;
-            campoCidade.style.backgroundColor = "#ffffff";
+            campoCidade.style.backgroundColor = "#fff";
         }
         atualizar();
     }
 
     function formatarKM(val) {
         if (!val) return "---";
-        let clean = val.replace(/[^\d.,]/g, '');
-        if (clean === "") return "---";
-        clean = clean.replace(',', '.');
+        let clean = val.replace(/[^\d.,]/g, '').replace(',', '.');
         let num = parseFloat(clean);
-        if (isNaN(num)) return "---";
-        return num.toLocaleString('pt-BR', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+        return isNaN(num) ? "---" : num.toLocaleString('pt-BR', { minimumFractionDigits: 3 });
     }
 
     function toggleSentidoManual() {
-        const select = document.getElementById('sentido');
-        const inputManual = document.getElementById('sentido_manual');
-        if (select.value === "MANUAL") {
-            inputManual.classList.remove('hidden');
-        } else {
-            inputManual.classList.add('hidden');
-            inputManual.value = "";
-        }
+        document.getElementById('sentido_manual').classList.toggle('hidden', document.getElementById('sentido').value !== "MANUAL");
         atualizar();
     }
 
     function mudarSubtipo() {
         const cod = document.getElementById('subtipo').value;
-        const boxObjeto = document.getElementById('box-objeto');
         const nomeObjeto = document.getElementById('nome_objeto').value || "objeto fixo";
         
-        if (cod === "4.9" || cod === "6.4") {
-            boxObjeto.classList.remove('hidden');
-        } else {
-            boxObjeto.classList.add('hidden');
-        }
+        // Abre o box se for 4.9 ou 6.4
+        document.getElementById('box-objeto').classList.toggle('hidden', cod !== "4.9" && cod !== "6.4");
 
-        let textoDinamica = dinamicasPadrao[cod] || "";
+        let texto = dinamicasPadrao[cod] || "";
         if (cod === "4.9" || cod === "6.4") {
-            textoDinamica = textoDinamica.replace("[OBJETO]", nomeObjeto);
+            texto = texto.replace("[OBJETO]", nomeObjeto);
         }
-
-        document.getElementById('dinamica_texto').value = textoDinamica;
+        document.getElementById('dinamica_texto').value = texto;
         atualizar();
     }
 
     function gerarTexto(comNegrito = false) {
+        const b = comNegrito ? "*" : "";
         const sade = document.getElementById('sade').value || "---";
         const vtr = document.getElementById('vtr').value || "---";
         const cidade = document.getElementById('cidade').value || "---";
         const conhecimento = document.getElementById('conhecimento').value;
         const ocorrencia = document.getElementById('ocorrencia').value;
         const rodovia = document.getElementById('rodovia').value;
-        const kmRaw = document.getElementById('km').value;
-        const kmFormatado = formatarKM(kmRaw);
+        const km = formatarKM(document.getElementById('km').value);
+        const tipoLabel = document.getElementById('subtipo').options[document.getElementById('subtipo').selectedIndex].text.split(' ').slice(1).join(' ');
+        const dinamica = document.getElementById('dinamica_texto').value;
+        const sentido = document.getElementById('sentido').value === "MANUAL" ? document.getElementById('sentido_manual').value : document.getElementById('sentido').value;
         
-        const selectSubtipo = document.getElementById('subtipo');
-        const tipoLabel = selectSubtipo.options[selectSubtipo.selectedIndex].text.split(' ').slice(1).join(' ');
-        const dinamicaManual = document.getElementById('dinamica_texto').value;
-
-        const sentidoSelect = document.getElementById('sentido').value;
-        const sentidoManual = document.getElementById('sentido_manual').value;
-        const sentidoFinal = (sentidoSelect === "MANUAL") ? (sentidoManual || "---") : sentidoSelect;
-
-        let infoVítimas = "";
+        let infoV = "";
         if (ocorrencia === "Sinistro de trânsito com vítima(s)") {
-            const leve = document.getElementById('qtd_leve').value;
-            const grave = document.getElementById('qtd_grave').value;
-            const gravissima = document.getElementById('qtd_gravissima').value;
-            let partes = [];
-            if (parseInt(leve) > 0) partes.push(`${leve.toString().padStart(2, '0')} leve(s)`);
-            if (parseInt(grave) > 0) partes.push(`${grave.toString().padStart(2, '0')} grave(s)`);
-            if (parseInt(gravissima) > 0) partes.push(`${gravissima.toString().padStart(2, '0')} gravíssima(s)`);
-            
-            if (partes.length > 0) {
-                const labelV = comNegrito ? "*Vítimas:*" : "Vítimas:";
-                infoVítimas = `\n${labelV} ${partes.join(', ')}`;
-            }
+            const l = document.getElementById('qtd_leve').value;
+            const g = document.getElementById('qtd_grave').value;
+            const gs = document.getElementById('qtd_gravissima').value;
+            let p = [];
+            if (l > 0) p.push(`${l.toString().padStart(2,'0')} leve(s)`);
+            if (g > 0) p.push(`${g.toString().padStart(2,'0')} grave(s)`);
+            if (gs > 0) p.push(`${gs.toString().padStart(2,'0')} gravíssima(s)`);
+            infoV = p.length > 0 ? `\n${b}Vítimas:${b} ${p.join(', ')}` : `\n${b}Vítimas:${b} Qtd não informada`;
         }
 
-        let horaFinal;
-        const inputHora = document.getElementById('input_hora');
-        if (document.getElementById('hora_manual').checked) {
-            horaFinal = inputHora.value || "--:--";
-        } else {
-            const agora = new Date();
-            horaFinal = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-            inputHora.value = horaFinal;
-        }
-
-        const dataStr = new Date().toLocaleDateString('pt-BR');
-
-        // Tags de negrito apenas se solicitado
-        const b = comNegrito ? "*" : "";
+        const hora = document.getElementById('hora_manual').checked ? document.getElementById('input_hora').value : new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+        const data = new Date().toLocaleDateString('pt-BR');
 
         return `${b}COMANDO DE POLÍCIA MILITAR RODOVIÁRIA${b}
 ${b}1º BPMRv / 1ª CIA / Posto 19${b}
 
 ${b}Protocolo SADE:${b} ${sade}
-${b}Data:${b} ${dataStr}
-${b}Hora:${b} ${horaFinal}
-${b}Rodovia:${b} ${rodovia} / ${b}KM:${b} ${kmFormatado}
+${b}Data:${b} ${data}
+${b}Hora:${b} ${hora}
+${b}Rodovia:${b} ${rodovia} / ${b}KM:${b} ${km}
 ${b}Cidade:${b} ${cidade}
 
 ${b}Tipo de ocorrência:${b} ${ocorrencia}
-${b}Tipo de sinistro:${b} ${tipoLabel}${infoVítimas}
+${b}Tipo de sinistro:${b} ${tipoLabel}${infoV}
 
-A guarnição foi acionada ${conhecimento} para atendimento de sinistro na rodovia ${rodovia}, km ${kmFormatado}, sentido ${sentidoFinal}, sendo empenhada a Viatura PM-${vtr}.
+A guarnição foi acionada ${conhecimento} para atendimento de sinistro na rodovia ${rodovia}, km ${km}, sentido ${sentido || '---'}, sendo empenhada a Viatura PM-${vtr}.
 
-${dinamicaManual}
+${dinamica}
 
 Foram adotadas as providências administrativas cabíveis.`;
     }
 
-    function atualizar() {
-        document.getElementById('relatorio').innerText = gerarTexto(false);
-    }
-
+    function atualizar() { document.getElementById('relatorio').innerText = gerarTexto(false); }
     function copiar() {
-        const texto = gerarTexto(false);
-        navigator.clipboard.writeText(texto).then(() => {
+        navigator.clipboard.writeText(gerarTexto(false)).then(() => {
             const btn = document.querySelector('.btn-copy');
             btn.innerText = "✅ Copiado!";
             setTimeout(() => btn.innerText = "📋 Copiar Texto", 2000);
         });
     }
-
     function enviarWhatsApp() {
-        const textoWhatsApp = gerarTexto(true);
-        const encodedText = encodeURIComponent(textoWhatsApp);
-        const url = `https://wa.me/?text=${encodedText}`;
-        window.open(url, '_blank');
+        window.open(`https://wa.me/?text=${encodeURIComponent(gerarTexto(true))}`, '_blank');
     }
 
     verificarRodovia();
