@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -21,7 +20,7 @@
             background: white; 
             width: 100%; 
             max-width: 750px; 
-            padding: 20px; 
+            padding: 15px; 
             border-radius: 12px; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             box-sizing: border-box;
@@ -29,33 +28,43 @@
 
         header { 
             text-align: center; 
-            margin-bottom: 20px; 
+            margin-bottom: 15px; 
             border-bottom: 3px solid var(--pm-green); 
-            padding-bottom: 10px; 
+            padding-bottom: 8px; 
         }
 
-        h1 { color: var(--pm-green); font-size: 18px; margin: 0; text-transform: uppercase; }
-        small { font-size: 12px; color: #666; }
+        h1 { color: var(--pm-green); font-size: 17px; margin: 0; text-transform: uppercase; }
+        small { font-size: 11px; color: #666; }
 
+        /* Grade principal */
         .form-section { 
             display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 10px; 
-            margin-bottom: 20px; 
+            grid-template-columns: 1fr 1fr 1fr; 
+            gap: 8px; 
+            margin-bottom: 15px; 
+        }
+
+        /* Ajustes específicos de largura solicitados */
+        .col-sade { grid-column: span 1; flex-grow: 2; }
+        .col-vtr { width: 70px; }
+        .col-km { width: 80px; }
+
+        /* Flexbox para alinhar inputs na mesma linha no mobile */
+        .row-flex {
+            display: flex;
+            gap: 8px;
+            grid-column: span 3;
         }
 
         @media (max-width: 600px) {
+            .row-flex { flex-wrap: nowrap; }
+            .span-3 { grid-column: span 1; }
             .form-section { grid-template-columns: 1fr; }
-            .span-2, .span-3 { grid-column: span 1; }
-            .btn-group { flex-direction: column; }
+            .row-flex { grid-column: span 1; }
             button { width: 100%; }
-            h1 { font-size: 16px; }
         }
 
-        .span-2 { grid-column: span 2; }
-        .span-3 { grid-column: span 3; }
-
-        label { display: block; font-weight: 600; margin-bottom: 5px; color: #444; font-size: 13px; }
+        label { display: block; font-weight: 600; margin-bottom: 4px; color: #444; font-size: 12px; }
         
         input, select, textarea { 
             width: 100%; 
@@ -67,7 +76,7 @@
             background-color: #fff;
         }
 
-        textarea { resize: vertical; min-height: 100px; font-family: inherit; }
+        textarea { resize: vertical; min-height: 90px; font-family: inherit; }
         
         #relatorio { 
             background: #f9f9f9; 
@@ -84,7 +93,7 @@
             border-left: 5px solid var(--pm-green); 
         }
 
-        .btn-group { display: flex; gap: 8px; margin-top: 15px; }
+        .btn-group { display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap; }
         
         button { 
             flex: 1; 
@@ -94,7 +103,6 @@
             cursor: pointer; 
             font-weight: bold; 
             font-size: 14px;
-            transition: 0.2s; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
@@ -107,30 +115,11 @@
 
         .hidden { display: none !important; }
         
-        .manual-box { 
-            background: #f0f4f1; 
-            padding: 12px; 
-            border-radius: 6px; 
-            border: 1px solid #d1d8d4; 
-            margin-top: 5px;
-        }
+        .manual-box { background: #f0f4f1; padding: 10px; border-radius: 6px; border: 1px solid #d1d8d4; margin-top: 5px; }
+        .vítimas-box { background: #fff0f0; padding: 10px; border-radius: 6px; border: 1px solid #ffdada; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
 
-        .vítimas-box { 
-            background: #fff0f0; 
-            padding: 12px; 
-            border-radius: 6px; 
-            border: 1px solid #ffdada; 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 8px; 
-        }
-        
-        @media (max-width: 400px) {
-            .vítimas-box { grid-template-columns: 1fr; }
-        }
-
-        .radio-group { display: flex; gap: 15px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
-        .radio-group label { font-weight: normal; margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .radio-group { display: flex; gap: 10px; align-items: center; margin-bottom: 5px; }
+        .radio-group label { font-weight: normal; margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 3px; }
     </style>
 </head>
 <body>
@@ -141,36 +130,45 @@
     </header>
 
     <div class="form-section">
-        <div class="span-1">
-            <label>Protocolo SADE</label>
-            <input type="text" id="sade" placeholder="Nº SADE" oninput="atualizar()">
-        </div>
-        <div class="span-1">
-            <label>Viatura</label>
-            <input type="text" id="vtr" placeholder="Ex: 5632" maxlength="4" oninput="validarVtr(this)">
-        </div>
-        <div class="span-1">
-            <label>Rodovia</label>
-            <select id="rodovia" onchange="verificarRodovia()">
-                <option value="SC-401">SC-401</option>
-                <option value="SC-405">SC-405</option>
-                <option value="SC-406">SC-406</option>
-                <option value="SC-281">SC-281</option>
-                <option value="SC-407">SC-407</option>
-                <option value="OUTRA">Outra...</option>
-            </select>
+        <div class="row-flex">
+            <div style="flex-grow: 1;">
+                <label>Protocolo SADE</label>
+                <input type="text" id="sade" placeholder="Nº SADE" oninput="atualizar()">
+            </div>
+            <div style="width: 75px;">
+                <label>VTR</label>
+                <input type="text" id="vtr" placeholder="0000" maxlength="4" oninput="validarVtr(this)">
+            </div>
+            <div style="width: 85px;">
+                <label>Rodovia</label>
+                <select id="rodovia" onchange="verificarRodovia()">
+                    <option value="SC-401">401</option>
+                    <option value="SC-405">405</option>
+                    <option value="SC-406">406</option>
+                    <option value="SC-281">281</option>
+                    <option value="SC-407">407</option>
+                </select>
+            </div>
         </div>
 
-        <div><label>Cidade</label><input type="text" id="cidade" value="Florianópolis" oninput="atualizar()"></div>
-        <div><label>KM (ex: 3.2)</label><input type="text" id="km" placeholder="---" oninput="atualizar()"></div>
+        <div class="row-flex">
+            <div style="flex-grow: 1;">
+                <label>Cidade</label>
+                <input type="text" id="cidade" value="Florianópolis" oninput="atualizar()">
+            </div>
+            <div style="width: 100px;">
+                <label>KM</label>
+                <input type="text" id="km" placeholder="0.000" maxlength="6" oninput="atualizar()">
+            </div>
+        </div>
 
         <div class="span-3 manual-box">
             <label>Horário do Sinistro</label>
             <div class="radio-group">
                 <label><input type="radio" name="tipo_hora" id="hora_auto" checked onclick="atualizar()"> Auto</label>
                 <label><input type="radio" name="tipo_hora" id="hora_manual" onclick="atualizar()"> Manual</label>
+                <input type="time" id="input_hora" oninput="atualizar()" style="width: 110px; padding: 4px;">
             </div>
-            <input type="time" id="input_hora" oninput="atualizar()">
         </div>
 
         <div class="span-3">
@@ -197,7 +195,7 @@
             </select>
         </div>
 
-        <div class="span-1">
+        <div class="span-3">
             <label>Sentido</label>
             <select id="sentido" onchange="toggleSentidoManual()">
                 <option value="Centro–Bairro">Centro–Bairro</option>
@@ -217,8 +215,8 @@
                     <option value="1.2">1.2 Atropelamento de Animal</option>
                 </optgroup>
                 <optgroup label="2. Abalroamento">
-                    <option value="2.1">2.1 Abalroamento Longitudinal (Mesmo Sentido)</option>
-                    <option value="2.2">2.2 Abalroamento Longitudinal (Sentido Oposto)</option>
+                    <option value="2.1">2.1 Abalroamento Longitudinal (Mesmo)</option>
+                    <option value="2.2">2.2 Abalroamento Longitudinal (Oposto)</option>
                     <option value="2.3">2.3 Abalroamento Transversal</option>
                 </optgroup>
                 <optgroup label="3. Colisão">
@@ -236,11 +234,11 @@
                     <option value="5.3">5.3 Saída de Pista com Capotamento</option>
                     <option value="5.4">5.4 Saída de Pista com Tombamento</option>
                 </optgroup>
-                <optgroup label="6. Saída de Pista seguida de Choque">
-                    <option value="6.1">6.1 Saída seguida de Choque em Poste</option>
-                    <option value="6.2">6.2 Saída seguida de Choque em Muro</option>
-                    <option value="6.3">6.3 Saída seguida de Choque em Defensa</option>
-                    <option value="6.4">6.4 Saída seguida de Choque em Objeto (especificar)</option>
+                <optgroup label="6. Saída + Choque">
+                    <option value="6.1">6.1 Saída + Choque Poste</option>
+                    <option value="6.2">6.2 Saída + Choque Muro</option>
+                    <option value="6.3">6.3 Saída + Choque Defensa</option>
+                    <option value="6.4">6.4 Saída + Choque Objeto (especificar)</option>
                 </optgroup>
             </select>
             
@@ -251,7 +249,7 @@
         </div>
 
         <div class="span-3">
-            <label>Dinâmica (Pode editar)</label>
+            <label>Dinâmica do Fato</label>
             <textarea id="dinamica_texto" oninput="atualizar()"></textarea>
         </div>
     </div>
@@ -260,7 +258,7 @@
     
     <div class="btn-group">
         <button class="btn-clear" onclick="window.location.reload()">Limpar</button>
-        <button class="btn-copy" onclick="copiar()">📋 Copiar Texto</button>
+        <button class="btn-copy" onclick="copiar()">📋 Copiar</button>
         <button class="btn-whatsapp" onclick="enviarWhatsApp()">📱 WhatsApp</button>
     </div>
 </div>
@@ -288,13 +286,12 @@
     };
 
     function validarVtr(input) {
-        input.value = input.value.replace(/\D/g, '');
+        input.value = input.value.replace(/\D/g, '').substring(0,4);
         atualizar();
     }
 
     function verificarVítimas() {
-        const ocorrencia = document.getElementById('ocorrencia').value;
-        document.getElementById('box-vítimas').classList.toggle('hidden', ocorrencia !== "Sinistro de trânsito com vítima(s)");
+        document.getElementById('box-vítimas').classList.toggle('hidden', document.getElementById('ocorrencia').value !== "Sinistro de trânsito com vítima(s)");
         atualizar();
     }
 
@@ -327,14 +324,9 @@
     function mudarSubtipo() {
         const cod = document.getElementById('subtipo').value;
         const nomeObjeto = document.getElementById('nome_objeto').value || "objeto fixo";
-        
-        // Abre o box se for 4.9 ou 6.4
         document.getElementById('box-objeto').classList.toggle('hidden', cod !== "4.9" && cod !== "6.4");
-
         let texto = dinamicasPadrao[cod] || "";
-        if (cod === "4.9" || cod === "6.4") {
-            texto = texto.replace("[OBJETO]", nomeObjeto);
-        }
+        if (cod === "4.9" || cod === "6.4") texto = texto.replace("[OBJETO]", nomeObjeto);
         document.getElementById('dinamica_texto').value = texto;
         atualizar();
     }
@@ -391,7 +383,7 @@ Foram adotadas as providências administrativas cabíveis.`;
         navigator.clipboard.writeText(gerarTexto(false)).then(() => {
             const btn = document.querySelector('.btn-copy');
             btn.innerText = "✅ Copiado!";
-            setTimeout(() => btn.innerText = "📋 Copiar Texto", 2000);
+            setTimeout(() => btn.innerText = "📋 Copiar", 2000);
         });
     }
     function enviarWhatsApp() {
