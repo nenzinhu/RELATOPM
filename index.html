@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -23,10 +24,10 @@
         .btn-copy { background-color: var(--pm-green); color: white; }
         .btn-clear { background-color: #e0e0e0; }
         .hidden { display: none; }
+        .manual-box { background: #fff3cd; padding: 10px; border-radius: 6px; border: 1px solid #ffeeba; margin-top: 5px; }
     </style>
 </head>
 <body>
-
 <div class="container">
     <header>
         <h1>COMANDO DE POLÍCIA MILITAR RODOVIÁRIA</h1>
@@ -94,7 +95,7 @@
         </div>
 
         <div class="span-3">
-            <label>Tipo de Sinistro (Preenche a dinâmica abaixo)</label>
+            <label>Tipo de Sinistro</label>
             <select id="subtipo" onchange="mudarSubtipo()">
                 <optgroup label="1. Atropelamento">
                     <option value="1.1">1.1 Atropelamento de Pedestre</option>
@@ -113,14 +114,25 @@
                 <optgroup label="4. Choque">
                     <option value="4.1">4.1 Choque em Poste</option>
                     <option value="4.6">4.6 Choque em Defensa</option>
-                    <option value="4.9">4.9 Choque em Objeto Fixo</option>
+                    <option value="4.9">4.9 Choque em Objeto (especificar)</option>
                 </optgroup>
                 <optgroup label="5. Saída de Pista">
                     <option value="5.1">5.1 Saída de Pista Simples</option>
                     <option value="5.3">5.3 Saída de Pista com Capotamento</option>
                     <option value="5.4">5.4 Saída de Pista com Tombamento</option>
                 </optgroup>
+                <optgroup label="6. Saída de Pista seguida de Choque">
+                    <option value="6.1">6.1 Saída seguida de Choque em Poste</option>
+                    <option value="6.2">6.2 Saída seguida de Choque em Muro</option>
+                    <option value="6.3">6.3 Saída seguida de Choque em Defensa</option>
+                    <option value="6.4">6.4 Saída seguida de Choque em Objeto (especificar)</option>
+                </optgroup>
             </select>
+            
+            <div id="box-objeto" class="manual-box hidden">
+                <label>Qual o objeto?</label>
+                <input type="text" id="nome_objeto" placeholder="Ex: árvore, lixeira, barranco..." oninput="mudarSubtipo()">
+            </div>
         </div>
 
         <div class="span-3">
@@ -150,16 +162,19 @@
         "3.3": "O veículo V1 colidiu com outros veículos, ocasionando engavetamento.",
         "4.1": "O veículo V1 chocou-se contra um poste.",
         "4.6": "O veículo V1 chocou-se contra uma defensa.",
-        "4.9": "O veículo V1 chocou-se contra objeto fixo.",
+        "4.9": "O veículo V1 chocou-se contra [OBJETO].",
         "5.1": "O veículo V1 perdeu o controle direcional e saiu da pista.",
         "5.3": "O veículo V1 perdeu o controle direcional, saiu da pista e capotou.",
-        "5.4": "O veículo V1 perdeu o controle direcional, saiu da pista e tombou."
+        "5.4": "O veículo V1 perdeu o controle direcional, saiu da pista e tombou.",
+        "6.1": "O veículo V1 perdeu o controle direcional, saiu da pista e chocou-se contra um poste.",
+        "6.2": "O veículo V1 perdeu o controle direcional, saiu da pista e chocou-se contra um muro.",
+        "6.3": "O veículo V1 perdeu o controle direcional, saiu da pista e chocou-se contra uma defensa.",
+        "6.4": "O veículo V1 perdeu o controle direcional, saiu da pista e chocou-se contra [OBJETO]."
     };
 
     function verificarRodovia() {
         const rodovia = document.getElementById('rodovia').value;
         const campoCidade = document.getElementById('cidade');
-        
         if (["SC-401", "SC-405", "SC-406"].includes(rodovia)) {
             campoCidade.value = "Florianópolis";
             campoCidade.readOnly = true;
@@ -196,7 +211,24 @@
 
     function mudarSubtipo() {
         const cod = document.getElementById('subtipo').value;
-        document.getElementById('dinamica_texto').value = dinamicasPadrao[cod] || "";
+        const boxObjeto = document.getElementById('box-objeto');
+        const nomeObjeto = document.getElementById('nome_objeto').value || "objeto fixo";
+        
+        // Mostrar/Esconder campo de objeto manual
+        if (cod === "4.9" || cod === "6.4") {
+            boxObjeto.classList.remove('hidden');
+        } else {
+            boxObjeto.classList.add('hidden');
+        }
+
+        let textoDinamica = dinamicasPadrao[cod] || "";
+        
+        // Substituir placeholder pelo nome digitado
+        if (cod === "4.9" || cod === "6.4") {
+            textoDinamica = textoDinamica.replace("[OBJETO]", nomeObjeto);
+        }
+
+        document.getElementById('dinamica_texto').value = textoDinamica;
         atualizar();
     }
 
@@ -210,7 +242,8 @@
         const kmRaw = document.getElementById('km').value;
         const kmFormatado = formatarKM(kmRaw);
         
-        const tipoLabel = document.getElementById('subtipo').options[document.getElementById('subtipo').selectedIndex].text.split(' ').slice(1).join(' ');
+        const selectSubtipo = document.getElementById('subtipo');
+        const tipoLabel = selectSubtipo.options[selectSubtipo.selectedIndex].text.split(' ').slice(1).join(' ');
         const dinamicaManual = document.getElementById('dinamica_texto').value;
 
         const sentidoSelect = document.getElementById('sentido').value;
@@ -255,8 +288,7 @@ Foram adotadas as providências administrativas cabíveis.`;
 
     // Inicialização
     verificarRodovia();
-    mudarSubtipo(); // Carrega a primeira dinâmica padrão
+    mudarSubtipo();
 </script>
-
 </body>
 </html>
