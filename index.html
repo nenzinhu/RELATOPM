@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -5,7 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Gerador Posto 19 - PMRv</title>
     <style>
-        :root { --pm-green: #1a472a; --pm-dark: #0d2616; --wa-green: #25D366; }
+        :root { 
+            --pm-green: #00A651; 
+            --pm-red: #ED1C24;
+            --pm-dark: #1a472a; 
+            --wa-green: #25D366; 
+        }
         
         body { 
             font-family: 'Segoe UI', Arial, sans-serif; 
@@ -33,10 +39,9 @@
             padding-bottom: 8px; 
         }
 
-        h1 { color: var(--pm-green); font-size: 17px; margin: 0; text-transform: uppercase; }
-        small { font-size: 11px; color: #666; }
+        h1 { color: var(--pm-dark); font-size: 17px; margin: 0; text-transform: uppercase; }
+        small { font-size: 11px; color: #666; font-weight: bold; }
 
-        /* Grade principal */
         .form-section { 
             display: grid; 
             grid-template-columns: 1fr 1fr 1fr; 
@@ -44,12 +49,6 @@
             margin-bottom: 15px; 
         }
 
-        /* Ajustes específicos de largura solicitados */
-        .col-sade { grid-column: span 1; flex-grow: 2; }
-        .col-vtr { width: 70px; }
-        .col-km { width: 80px; }
-
-        /* Flexbox para alinhar inputs na mesma linha no mobile */
         .row-flex {
             display: flex;
             gap: 8px;
@@ -57,10 +56,9 @@
         }
 
         @media (max-width: 600px) {
-            .row-flex { flex-wrap: nowrap; }
-            .span-3 { grid-column: span 1; }
             .form-section { grid-template-columns: 1fr; }
-            .row-flex { grid-column: span 1; }
+            .row-flex { flex-wrap: nowrap; grid-column: span 1; }
+            .span-3 { grid-column: span 1; }
             button { width: 100%; }
         }
 
@@ -109,7 +107,7 @@
             gap: 8px; 
         }
 
-        .btn-copy { background-color: var(--pm-green); color: white; }
+        .btn-copy { background-color: var(--pm-dark); color: white; }
         .btn-whatsapp { background-color: var(--wa-green); color: white; }
         .btn-clear { background-color: #e0e0e0; color: #333; }
 
@@ -204,7 +202,7 @@
                 <option value="KM Decrescente">KM Decrescente</option>
                 <option value="MANUAL">Outro...</option>
             </select>
-            <input type="text" id="sentido_manual" class="hidden" placeholder="Descreva..." oninput="atualizar()" style="margin-top:5px;">
+            <input type="text" id="sentido_manual" class="hidden" placeholder="Descreva o sentido..." oninput="atualizar()" style="margin-top:5px;">
         </div>
 
         <div class="span-3">
@@ -240,16 +238,24 @@
                     <option value="6.3">6.3 Saída + Choque Defensa</option>
                     <option value="6.4">6.4 Saída + Choque Objeto (especificar)</option>
                 </optgroup>
+                <optgroup label="7. Outros">
+                    <option value="7.1">7.1 Outros (especificar)</option>
+                </optgroup>
             </select>
             
             <div id="box-objeto" class="manual-box hidden">
                 <label>Qual o objeto?</label>
                 <input type="text" id="nome_objeto" placeholder="Ex: árvore, barranco..." oninput="mudarSubtipo()">
             </div>
+
+            <div id="box-outros" class="manual-box hidden">
+                <label>Descreva a natureza do sinistro:</label>
+                <input type="text" id="descricao_outros" placeholder="Ex: Incêndio em veículo, queda de carga..." oninput="mudarSubtipo()">
+            </div>
         </div>
 
         <div class="span-3">
-            <label>Dinâmica do Fato</label>
+            <label>Dinâmica do Fato (Auto-editável)</label>
             <textarea id="dinamica_texto" oninput="atualizar()"></textarea>
         </div>
     </div>
@@ -282,7 +288,8 @@
         "6.1": "O veículo V1 saiu da pista e chocou-se contra um poste.",
         "6.2": "O veículo V1 saiu da pista e chocou-se contra um muro.",
         "6.3": "O veículo V1 saiu da pista e chocou-se contra uma defensa.",
-        "6.4": "O veículo V1 saiu da pista e chocou-se contra [OBJETO]."
+        "6.4": "O veículo V1 saiu da pista e chocou-se contra [OBJETO].",
+        "7.1": "Ocorrência registrada como [OUTROS]."
     };
 
     function validarVtr(input) {
@@ -324,9 +331,21 @@
     function mudarSubtipo() {
         const cod = document.getElementById('subtipo').value;
         const nomeObjeto = document.getElementById('nome_objeto').value || "objeto fixo";
+        const descOutros = document.getElementById('descricao_outros').value || "natureza não especificada";
+
+        // Exibe/Oculta campos extras
         document.getElementById('box-objeto').classList.toggle('hidden', cod !== "4.9" && cod !== "6.4");
+        document.getElementById('box-outros').classList.toggle('hidden', cod !== "7.1");
+
         let texto = dinamicasPadrao[cod] || "";
-        if (cod === "4.9" || cod === "6.4") texto = texto.replace("[OBJETO]", nomeObjeto);
+        
+        // Substituições dinâmicas
+        if (cod === "4.9" || cod === "6.4") {
+            texto = texto.replace("[OBJETO]", nomeObjeto);
+        } else if (cod === "7.1") {
+            texto = texto.replace("[OUTROS]", descOutros);
+        }
+
         document.getElementById('dinamica_texto').value = texto;
         atualizar();
     }
@@ -340,10 +359,16 @@
         const ocorrencia = document.getElementById('ocorrencia').value;
         const rodovia = document.getElementById('rodovia').value;
         const km = formatarKM(document.getElementById('km').value);
-        const tipoLabel = document.getElementById('subtipo').options[document.getElementById('subtipo').selectedIndex].text.split(' ').slice(1).join(' ');
         const dinamica = document.getElementById('dinamica_texto').value;
         const sentido = document.getElementById('sentido').value === "MANUAL" ? document.getElementById('sentido_manual').value : document.getElementById('sentido').value;
         
+        // Trata o label do tipo de sinistro
+        const selectSubtipo = document.getElementById('subtipo');
+        let tipoLabel = selectSubtipo.options[selectSubtipo.selectedIndex].text.split(' ').slice(1).join(' ');
+        if (selectSubtipo.value === "7.1" && document.getElementById('descricao_outros').value) {
+            tipoLabel = document.getElementById('descricao_outros').value;
+        }
+
         let infoV = "";
         if (ocorrencia === "Sinistro de trânsito com vítima(s)") {
             const l = document.getElementById('qtd_leve').value;
@@ -379,6 +404,7 @@ Foram adotadas as providências administrativas cabíveis.`;
     }
 
     function atualizar() { document.getElementById('relatorio').innerText = gerarTexto(false); }
+    
     function copiar() {
         navigator.clipboard.writeText(gerarTexto(false)).then(() => {
             const btn = document.querySelector('.btn-copy');
@@ -386,10 +412,12 @@ Foram adotadas as providências administrativas cabíveis.`;
             setTimeout(() => btn.innerText = "📋 Copiar", 2000);
         });
     }
+
     function enviarWhatsApp() {
         window.open(`https://wa.me/?text=${encodeURIComponent(gerarTexto(true))}`, '_blank');
     }
 
+    // Inicialização
     verificarRodovia();
     mudarSubtipo();
 </script>
